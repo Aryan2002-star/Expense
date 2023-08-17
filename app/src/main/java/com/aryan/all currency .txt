@@ -1,0 +1,108 @@
+package com.aryan;
+
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.os.Bundle;
+import android.telephony.SmsMessage;
+import android.util.Log;
+
+import java.util.ArrayList;
+
+public class SmsReceiver extends BroadcastReceiver{
+
+
+
+    @Override
+    public void onReceive(Context context, Intent intent) {
+
+        Bundle bundle = intent.getExtras();
+        Object[] sms = (Object[]) bundle.get("pdus");
+
+        for (Object p : sms) {
+            SmsMessage message = SmsMessage.createFromPdu((byte[]) p);
+
+            String mbno = message.getDisplayOriginatingAddress();
+            String msg = message.getDisplayMessageBody();
+//            if (mbno.contains("")){
+
+//            Log.d("AMOUNT_DEB_CRED","\nAmount : " + msg);
+
+
+            String s = msg;
+            s = s.replace("/", "");
+            s = s.toLowerCase();
+
+
+            // SubString  allocation
+            String amount="";
+            String amtPre="inr ";
+            String amtPre1="rs.";
+            String accPre="ac ";
+
+            //Index Calculation
+
+            int amt_index=s.indexOf(amtPre);
+            int amt_index1=s.indexOf(amtPre1);
+            int acc_index=s.indexOf(accPre);
+
+            // Account Number
+
+            acc_index = acc_index+accPre.length();
+            String account = "";
+            while (s.charAt(acc_index) !=' ') {
+                account = account+s.charAt(acc_index);
+                acc_index++;
+            }
+
+            // Amount in INR
+
+
+            amt_index = amt_index+amtPre.length();
+
+            String am1="";
+            while (s.charAt(amt_index) !=' ') {
+                am1=am1+s.charAt(amt_index);
+                amt_index++;
+            }
+
+            // Amount in rs.
+            amt_index1 = amt_index1+amtPre1.length();
+            String am2="";
+            while (s.charAt(amt_index1) !=' ') {
+                am2=am2+s.charAt(amt_index1);
+                amt_index1++;
+            }
+
+
+            // which to select inr or rs
+
+            if (amt_index ==-1){
+                amount = am2;
+            } else if (amt_index1 == -1) {
+                amount=am1;
+            }else if(amt_index<amt_index1){
+                amount = am1;
+            }else {
+                amount = am2;
+            }
+//            System.out.println("Amount "+amount);
+
+
+
+//            System.out.println("Account Number "+account);
+//            }
+            if ((amt_index==-1) &&(amt_index1==-1)) {
+
+            }else {
+                Log.d("MsgVedyAsMe", "Message Number: " + mbno + "\nMessage : " + msg + "\nAmount : " + amount + "\nAccount Number : " + account);
+
+            }
+
+
+        }
+
+    }
+
+
+}
