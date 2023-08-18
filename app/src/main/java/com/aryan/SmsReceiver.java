@@ -34,52 +34,63 @@ public class SmsReceiver extends BroadcastReceiver{
 
             // SubString  allocation
 
-            String amtPre="rs."; // currency value
-            String amount="";
-            String accPre="ac ";
+            String amtPre = "rs."; // currency value
+            String amount = "";
+            String accPre = "ac ";
 
             //Index Calculation
 
-            int amt_index=s.indexOf(amtPre);
-
-            int acc_index=s.indexOf(accPre);
-
-            // Account Number
-
-            acc_index = acc_index+accPre.length();
-            String account = "";
-            while (s.charAt(acc_index) !=' ') {
-                account = account+s.charAt(acc_index);
-                acc_index++;
-            }
-
-            // Amount in INR
+            int amt_index = -1;
+            amt_index = s.indexOf(amtPre);
+            int acc_index=-1;
+            acc_index = s.indexOf(accPre);
 
 
-            amt_index = amt_index+amtPre.length();
+            if ((amt_index != -1) && (acc_index != -1)) {
+
+                // Account Number
+
+                acc_index = acc_index + accPre.length();
+                String account = "";
+                while (s.charAt(acc_index) != ' ') {
+                    account = account + s.charAt(acc_index);
+                    acc_index++;
+                }
+
+                // Amount in INR
 
 
-            while (s.charAt(amt_index) !=' ') {
-                amount=amount+s.charAt(amt_index);
-                amt_index++;
-            }
+                amt_index = amt_index + amtPre.length();
+
+
+                while (s.charAt(amt_index) != ' ') {
+                    amount = amount + s.charAt(amt_index);
+                    amt_index++;
+                }
 
 
 //            System.out.println("Amount "+amount);
 
 
-
 //            System.out.println("Account Number "+account);
 //            }
+                double amtsss = Double.parseDouble(amount);
 
-            Log.d("MsgVedyAsMe", "Message Number: " + mbno + "\nMessage : " + msg +"\nAmount : "+amount+"\nAccount Number : "+account);
+                Log.d("MsgVedyAsMe", "Message Number: " + mbno + "\nMessage : " + msg + "\nAmount : " + amtsss + "\nAccount Number : " + account);
 
 
+            }else {
+                Log.d("MsgVedyAsMe", "Message Number: " + mbno + "\nMessage : " + msg );
 
-
+            }
         }
 
+
     }
+
+
+
+
 
 
 }
